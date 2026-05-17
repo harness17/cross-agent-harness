@@ -107,6 +107,10 @@ ASP.NET Core MVC プロジェクト向けの profile 例は [examples/aspnetcore
 | YouTom | Electron + React desktop app | profile 方式へ更新済み | `npm run lint` / `npm run test` / `npm run build` |
 | GoogleChromeExtensions | Manifest V3 Chrome extensions container | 導入済み | `node .\verify-detect.mjs` |
 
+## 関連記事
+
+- [CodexとClaude Codeの共同作業をcross-agent-harnessに切り出した](https://zenn.dev/harness/articles/cross-agent-harness-introduction) (2026-05-17)
+- 
 ## ライセンス
 
 MIT License
