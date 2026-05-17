@@ -98,6 +98,15 @@ ASP.NET Core MVC プロジェクト向けの profile 例は [examples/aspnetcore
 - 作業ログと次アクションは `CLAUDE_CODE_HANDOFF.md` に集約する
 - エージェント同士が同じファイルを同時に直す場合は、推測で上書きせずユーザーへ確認する
 
+## 導入実績
+
+| プロジェクト | 種別 | 導入状況 | 確認した verify |
+|---|---|---|---|
+| DevNext | ASP.NET Core MVC template | 導入済み | `dotnet build DevNext.slnx` / `dotnet test .\Tests\Tests.csproj` |
+| Phycock | ASP.NET Core MVC health management app | 導入済み | 既存 profile / handoff 運用を確認 |
+| YouTom | Electron + React desktop app | profile 方式へ更新済み | `npm run lint` / `npm run test` / `npm run build` |
+| GoogleChromeExtensions | Manifest V3 Chrome extensions container | 導入済み | `node .\verify-detect.mjs` |
+
 ## ライセンス
 
 MIT License
