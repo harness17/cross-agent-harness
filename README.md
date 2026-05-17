@@ -89,6 +89,7 @@ Codex は作業開始時に `CLAUDE_CODE_HANDOFF.md` の最新セクションを
 ```
 
 handoff の記入例は [examples/handoff-example.md](examples/handoff-example.md) を参照してください。
+ASP.NET Core MVC プロジェクト向けの profile 例は [examples/aspnetcore-mvc-profile.md](examples/aspnetcore-mvc-profile.md) にあります。
 
 ## 設計方針
 
