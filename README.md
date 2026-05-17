@@ -110,7 +110,7 @@ ASP.NET Core MVC プロジェクト向けの profile 例は [examples/aspnetcore
 ## 関連記事
 
 - [CodexとClaude Codeの共同作業をcross-agent-harnessに切り出した](https://zenn.dev/harness/articles/cross-agent-harness-introduction) (2026-05-17)
-- 
+
 ## ライセンス
 
 MIT License
