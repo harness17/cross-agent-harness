@@ -77,8 +77,10 @@ function Write-Template {
 Copy-HarnessFile ".claude\rules\cross-agent-harness.md" ".claude\rules\cross-agent-harness.md"
 Copy-HarnessFile ".claude\rules\handoff-protocol.md" ".claude\rules\handoff-protocol.md"
 Copy-HarnessFile ".claude\skills\codex-handoff\SKILL.md" ".claude\skills\codex-handoff\SKILL.md"
+Copy-HarnessFile ".claude\skills\codex-dev\SKILL.md" ".claude\skills\codex-dev\SKILL.md"
 Copy-HarnessFile ".claude\skills\cross-review\SKILL.md" ".claude\skills\cross-review\SKILL.md"
 Copy-HarnessFile ".agents\skills\implement-task\SKILL.md" ".agents\skills\implement-task\SKILL.md"
+Copy-HarnessFile "scripts\invoke-claude-review.ps1" "scripts\invoke-claude-review.ps1"
 
 Write-Template "project-collaboration-profile.template.md" ".claude\rules\project-collaboration-profile.md" -NoOverwrite
 Write-Template "CLAUDE_CODE_HANDOFF.template.md" "CLAUDE_CODE_HANDOFF.md" -NoOverwrite
@@ -91,3 +93,4 @@ Write-Host "   @.claude/rules/cross-agent-harness.md"
 Write-Host "   @.claude/rules/project-collaboration-profile.md"
 Write-Host "   @.claude/rules/handoff-protocol.md"
 Write-Host "3. Add a short AGENTS.md section that tells Codex to read CLAUDE_CODE_HANDOFF.md and .agents/skills/implement-task/SKILL.md"
+Write-Host "4. Optional: run scripts\invoke-claude-review.ps1 from Codex to append a Claude Code review to CLAUDE_CODE_HANDOFF.md"

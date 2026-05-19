@@ -38,8 +38,10 @@ pwsh ./install.ps1 -TargetPath /path/to/my-app -ProjectName MyApp
 .claude/rules/handoff-protocol.md
 .claude/rules/project-collaboration-profile.md
 .claude/skills/codex-handoff/SKILL.md
+.claude/skills/codex-dev/SKILL.md
 .claude/skills/cross-review/SKILL.md
 .agents/skills/implement-task/SKILL.md
+scripts/invoke-claude-review.ps1
 CLAUDE_CODE_HANDOFF.md
 ```
 
@@ -91,11 +93,62 @@ Codex は作業開始時に `CLAUDE_CODE_HANDOFF.md` の最新セクションを
 handoff の記入例は [examples/handoff-example.md](examples/handoff-example.md) を参照してください。
 ASP.NET Core MVC プロジェクト向けの profile 例は [examples/aspnetcore-mvc-profile.md](examples/aspnetcore-mvc-profile.md) にあります。
 
+## Codex への実装委譲（codex-dev スキル）
+
+上記の運用フローは handoff ファイルを介した非同期連携です。これとは別に、Claude Code が Codex を同期的に起動して実装を委譲する `/codex-dev` スキルを同梱しています。
+
+`/codex-dev` は Codex を MCP サーバとして呼び出します。設計（Plan）→実装計画→`mcp__codex__codex` ツールで実装→`/cross-review` でレビュー→handoff 追記、までを一気通貫で進めます。仕様が明確で 1 スプリント単位に区切れる実装委譲に向いています。
+
+Codex には commit / push をさせず、未コミット差分として返させます。Claude Code が差分と verify 結果を確認し、必要なら `/cross-review` 後にユーザーへ commit 可否を確認します。
+
+利用には Codex CLI が必要です。プロジェクトルートの `.mcp.json` に codex MCP サーバを登録します（既存の `.mcp.json` がある場合は `mcpServers` に `codex` エントリだけを追加）。
+
+```json
+{
+  "mcpServers": {
+    "codex": {
+      "command": "codex",
+      "args": ["mcp-server"]
+    }
+  }
+}
+```
+
+`mcp__codex__codex` の呼び出しは Codex がセッションを完走するまで返らない同期ブロッキング方式です。進捗表示はありません。大きなタスクは 1 スプリント単位に分割してください。詳細は `.claude/skills/codex-dev/SKILL.md` を参照してください。
+
+## Claude Code レビュー自動呼び出し
+
+Codex 側から Claude Code CLI をレビュー専用で呼び出し、結果を `CLAUDE_CODE_HANDOFF.md` に追記できます。
+
+```powershell
+.\scripts\invoke-claude-review.ps1 -TargetPath .
+```
+
+このスクリプトは `CLAUDE_CODE_HANDOFF.md`、`.claude/rules/project-collaboration-profile.md`、`git diff HEAD` を Claude Code に渡します。Claude Code には `--tools ""` と `--permission-mode dontAsk` を指定するため、ファイル編集はさせず、プロンプト内の情報だけでレビューします。
+
+事前確認だけしたい場合:
+
+```powershell
+.\scripts\invoke-claude-review.ps1 -TargetPath . -DryRun
+```
+
+主なオプション:
+
+| オプション | 既定値 | 用途 |
+|---|---:|---|
+| `-MaxBudgetUsd` | `1` | Claude Code の最大 API 予算 |
+| `-MaxHandoffChars` | `20000` | handoff から渡す最大文字数 |
+| `-MaxProfileChars` | `12000` | profile から渡す最大文字数 |
+| `-MaxDiffChars` | `40000` | diff から渡す最大文字数 |
+
+このスクリプトは Codex が Claude Code をレビュー専用で呼び出すものです。逆方向、つまり Claude Code が Codex に実装を委譲する自動化は `/codex-dev` スキル（前述）を使ってください。同一 worktree での上書き事故を避けるため、レビュー専用スクリプトと実装委譲は役割を分けています。
+
 ## 設計方針
 
 - 共通ルールは `.claude/rules/cross-agent-harness.md` に置く
 - プロジェクト固有の検証、重大指摘、担当境界は `project-collaboration-profile.md` に置く
 - 作業ログと次アクションは `CLAUDE_CODE_HANDOFF.md` に集約する
+- Claude Code の自動呼び出しは、最初は review-only で使い、実装委譲は別 worktree か明示的な所有範囲を前提にする
 - エージェント同士が同じファイルを同時に直す場合は、推測で上書きせずユーザーへ確認する
 
 ## 導入実績
