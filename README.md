@@ -163,6 +163,7 @@ Codex 側から Claude Code CLI をレビュー専用で呼び出し、結果を
 ## 関連記事
 
 - [CodexとClaude Codeの共同作業をcross-agent-harnessに切り出した](https://zenn.dev/harness/articles/cross-agent-harness-introduction) (2026-05-17)
+- [CodexとClaude Codeを相互呼び出しするハーネスを組んだ](https://zenn.dev/harness/articles/cross-agent-harness-automation) (2026-05-19)
 
 ## ライセンス
 
