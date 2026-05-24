@@ -19,14 +19,24 @@
 - 主題: <一文>
 - 触ってよい範囲: <files / directories>
 - 触ってはいけない範囲: <unrelated files / user changes>
+- 削除すべきファイル: <置き換え対象 / 廃止コンポーネント。なければ「なし」と明記>
 - 完成条件:
   - <normal behavior>
   - <preconditions / auth / usage>
   - <error handling>
   - <no-regression checks>
+- 層を跨ぐ契約（該当する場合）:
+  - 契約名 / 種別: <例: IPC channel `xxx:fetch` / REST `GET /api/yyy` / service method `ZzzService.run`>
+  - 実装ファイル: <発火側 / 受信側のファイルパス>
+  - 公開層 / 呼び出し元: <preload exposure・SDK 関数・controller など>
+  - request / response または event payload: <型と必須フィールド>
+  - error / permission: <想定エラー、認可条件>
+  - 互換性確認: <既存呼び出し元への影響、後方互換の要否>
+  - 片側のみの場合は `N/A: 理由` を明記する（例: fire-and-forget の event、廃止予定 API）。
 - 変更内容:
   - <summary>
 - セルフ verify: <command and result>
+  - 依存プロセス（dev サーバ等）が原因で全体 verify が止まった場合、targeted な部分実行は暫定の切り分けに留める。merge / publish 前は依存プロセスを停止して全体 verify を再実行する。再実行で通らない限り merge ゲートは未達扱いとし handoff に明記する。
 - 実動確認: <method and result or N/A>
 - レビュー観点:
   - <risk-focused checks>
