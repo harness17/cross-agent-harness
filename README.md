@@ -101,7 +101,7 @@ ASP.NET Core MVC プロジェクト向けの profile 例は [examples/aspnetcore
 
 Codex には commit / push をさせず、未コミット差分として返させます。Claude Code が差分と verify 結果を確認し、必要なら `/cross-review` 後にユーザーへ commit 可否を確認します。
 
-利用には Codex CLI が必要です。プロジェクトルートの `.mcp.json` に codex MCP サーバを登録します（既存の `.mcp.json` がある場合は `mcpServers` に `codex` エントリだけを追加）。
+利用には Codex CLI が必要です。プロジェクトルートの `.mcp.json` に codex MCP サーバを登録します（既存の `.mcp.json` がある場合は `mcpServers` に `codex` エントリだけを追加）。なお本 repo 直下の `.mcp.json` は、ハーネス自身の cross-review を Claude Code から呼ぶための実行設定であり、`install.ps1` のコピー対象には含まれません（導入先で個別に作成してください）。
 
 ```json
 {
