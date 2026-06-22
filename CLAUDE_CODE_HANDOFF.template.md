@@ -26,6 +26,10 @@ status: active
 - 触ってはいけない範囲: アプリ本体、既存未コミット変更
 - セルフ verify: ❌
 - 実動確認: N/A（ドキュメントのみ）
+- metadata self-check:
+  - `対象リポジトリ` が current repo root と一致している
+  - `最終更新` を今回の追記日に更新した
+  - `TODO` / `YYYY-MM-DD` / `<agent>` / `<repo-root>` を残していない
 - レビュー観点:
   - project profile が対象プロジェクトの実態に合っているか
   - verify コマンドが正しいか
@@ -41,3 +45,4 @@ status: active
 ### 次アクション
 
 - `project-collaboration-profile.md` を対象プロジェクト用に埋める。
+- handoff 先頭メタデータを実体名へ更新し、placeholder が残っていないか確認する。

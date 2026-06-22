@@ -74,6 +74,44 @@ function Write-Template {
     Write-Host "created: $TargetRelative"
 }
 
+function Test-HarnessWarnings {
+    param(
+        [string]$RootPath
+    )
+
+    $warnings = [System.Collections.Generic.List[string]]::new()
+    $profilePath = Join-Path $RootPath ".claude\rules\project-collaboration-profile.md"
+    $handoffPath = Join-Path $RootPath "CLAUDE_CODE_HANDOFF.md"
+
+    if (Test-Path $profilePath) {
+        $profileText = [System.IO.File]::ReadAllText($profilePath, [System.Text.UTF8Encoding]::new($false, $true))
+        foreach ($token in @("TODO", "YYYY-MM-DD", "<agent>", "<repo-root>")) {
+            if ($profileText.Contains($token)) {
+                $warnings.Add("profile still contains placeholder: $token")
+            }
+        }
+    }
+
+    if (Test-Path $handoffPath) {
+        $handoffText = [System.IO.File]::ReadAllText($handoffPath, [System.Text.UTF8Encoding]::new($false, $true))
+        foreach ($token in @("TODO", "YYYY-MM-DD", "<agent>", "<repo-root>")) {
+            if ($handoffText.Contains($token)) {
+                $warnings.Add("handoff still contains placeholder: $token")
+            }
+        }
+
+        $targetLine = [regex]::Match($handoffText, '対象リポジトリ:\s*`([^`]+)`')
+        if ($targetLine.Success) {
+            $expected = $RootPath.Replace("\", "/")
+            if ($targetLine.Groups[1].Value -ne $expected) {
+                $warnings.Add("handoff target repo mismatch: expected $expected")
+            }
+        }
+    }
+
+    return $warnings
+}
+
 Copy-HarnessFile ".claude\rules\cross-agent-harness.md" ".claude\rules\cross-agent-harness.md"
 Copy-HarnessFile ".claude\rules\handoff-protocol.md" ".claude\rules\handoff-protocol.md"
 Copy-HarnessFile ".claude\skills\codex-handoff\SKILL.md" ".claude\skills\codex-handoff\SKILL.md"
@@ -85,6 +123,8 @@ Copy-HarnessFile "scripts\invoke-claude-review.ps1" "scripts\invoke-claude-revie
 Write-Template "project-collaboration-profile.template.md" ".claude\rules\project-collaboration-profile.md" -NoOverwrite
 Write-Template "CLAUDE_CODE_HANDOFF.template.md" "CLAUDE_CODE_HANDOFF.md" -NoOverwrite
 
+$warnings = Test-HarnessWarnings -RootPath $targetRoot.Path
+
 Write-Host ""
 Write-Host "Next steps:"
 Write-Host "1. Fill .claude/rules/project-collaboration-profile.md"
@@ -94,3 +134,10 @@ Write-Host "   @.claude/rules/project-collaboration-profile.md"
 Write-Host "   @.claude/rules/handoff-protocol.md"
 Write-Host "3. Add a short AGENTS.md section that tells Codex to read CLAUDE_CODE_HANDOFF.md and .agents/skills/implement-task/SKILL.md"
 Write-Host "4. Optional: run scripts\invoke-claude-review.ps1 from Codex to append a Claude Code review to CLAUDE_CODE_HANDOFF.md"
+if ($warnings.Count -gt 0) {
+    Write-Host ""
+    Write-Host "Warnings:" -ForegroundColor Yellow
+    foreach ($warning in $warnings) {
+        Write-Host "- $warning" -ForegroundColor Yellow
+    }
+}

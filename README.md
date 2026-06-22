@@ -53,9 +53,12 @@ CLAUDE_CODE_HANDOFF.md
 
 - プロジェクト種別
 - 通常の verify コマンド
+- 変更種別ごとの追加 verify
 - UI や実動確認が必要な場合の確認方法
+- 実動確認の担当者
 - Codex と Claude Code の担当境界
 - merge / publish ブロッカーにする重大指摘
+- handoff 先頭メタデータの実体名チェック
 
 次に、対象プロジェクトの `CLAUDE.md` に以下を追加します。
 
@@ -92,6 +95,16 @@ Codex は作業開始時に `CLAUDE_CODE_HANDOFF.md` の最新セクションを
 
 handoff の記入例は [examples/handoff-example.md](examples/handoff-example.md) を参照してください。
 ASP.NET Core MVC プロジェクト向けの profile 例は [examples/aspnetcore-mvc-profile.md](examples/aspnetcore-mvc-profile.md) にあります。
+monorepo で task-scoped verify を使う例は [examples/monorepo-multi-extension.md](examples/monorepo-multi-extension.md) を参照してください。
+active handoff と archive を分ける例は [examples/archived-handoff-active-summary.md](examples/archived-handoff-active-summary.md) を参照してください。
+
+## 設定時の注意
+
+- `project-collaboration-profile.md` の verify は 1 本だけで済ませず、`通常 verify`、`変更種別ごとの追加 verify`、`manual gate` を分けて書く
+- monorepo では root profile に「どの subproject を通常 verify にするか」と「task-scoped verify をどこで増やすか」を書く
+- `CLAUDE_CODE_HANDOFF.md` 先頭の `対象リポジトリ`、`最終更新`、status は追記のたびに実体へ合わせる
+- placeholder の `TODO`、`YYYY-MM-DD`、`<agent>`、`<repo-root>` を残したまま導入完了扱いにしない
+- packaging / signing / release build のように環境依存で毎回実行できない verify は、`N/A と理由` を handoff に明記する
 
 ## Codex への実装委譲（codex-dev スキル）
 
@@ -148,6 +161,7 @@ Codex 側から Claude Code CLI をレビュー専用で呼び出し、結果を
 - 共通ルールは `.claude/rules/cross-agent-harness.md` に置く
 - プロジェクト固有の検証、重大指摘、担当境界は `project-collaboration-profile.md` に置く
 - 作業ログと次アクションは `CLAUDE_CODE_HANDOFF.md` に集約する
+- active な handoff は短く保ち、完了履歴は archive へ移す
 - Claude Code の自動呼び出しは、最初は review-only で使い、実装委譲は別 worktree か明示的な所有範囲を前提にする
 - エージェント同士が同じファイルを同時に直す場合は、推測で上書きせずユーザーへ確認する
 

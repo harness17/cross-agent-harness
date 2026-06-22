@@ -26,11 +26,22 @@
 TODO
 ```
 
+変更種別ごとの追加 verify:
+
+```text
+TODO（例: このサブプロジェクトを触ったらこの verify、この packaging を触ったら全体 verify）
+```
+
 実動確認が必要な場合:
 
 ```bash
 TODO
 ```
+
+manual gate:
+
+- TODO（例: release / publish / screenshot / store listing は user 明示まで進めない）
+- 実行不能な verify がある場合は `N/A と理由` を handoff に残す
 
 ## レビュー観点
 
@@ -48,6 +59,7 @@ TODO
 
 - 完成条件に対応するテストが追加・更新されているか
 - project profile の verify コマンドが pass するか
+- task-scoped verify が必要な変更なのに通常 verify だけで終わっていないか
 
 ### セキュリティ・運用
 
@@ -63,3 +75,4 @@ TODO
 以下は原則として merge / publish ブロッカーにする。
 
 - TODO
+- handoff の `対象リポジトリ`、verify、担当境界が実体とずれている
